@@ -99,7 +99,7 @@ See test script [sao/base_test.html](https://github.com/matsukei/sao/blob/master
 
 ### Report Bugs
 
-http://osc.matsukei.net/projects/sao/issues/new or [github issues](https://github.com/matsukei/sao/issues/new)
+[github issues](https://github.com/matsukei/sao/issues/new)
 
 ## Author
 
