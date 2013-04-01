@@ -1,7 +1,5 @@
-// Strict Arithmetic Operations (SAO) Library.
-//
-// @license The MIT-Licence. See MIT-LICENSE.
-
+// (maybe) Strict Arithmetic Operations (SAO) Library.
+// @license The MIT-Licence. See LICENSE file.
 
 goog.provide('sao');
 
