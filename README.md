@@ -58,7 +58,7 @@ sao.round(1.456);    // => 2 (Number!)
 ### How to mix
 
 ``` javascript
-sao.round(sao.div(sao.add(sao.mul(10, 2), sao.div(10, 5)), 2), 0); // => 3
+sao.round(sao.div(sao.add(sao.mul(10, 2), sao.div(20, 4)), 2), 0); // => 13
 ```
 
 ### More
