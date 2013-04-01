@@ -60,7 +60,7 @@ sao.round(sao.div(sao.add(sao.mul(10, 2), sao.div(10, 5)), 2), 0); // => 3
 
 ### More
 
-See test script sao/base_test.html.
+See test script [sao/base_test.html](https://github.com/matsukei/sao/blob/master/sao/base_test.html).
 
 ## Development
 
@@ -104,4 +104,4 @@ http://osc.matsukei.net/projects/sao/issues/new or [github issues](https://githu
 
 ## License
 
-See LICENSE file.
+See [LICENSE file](https://github.com/matsukei/sao/blob/master/LICENSE).
