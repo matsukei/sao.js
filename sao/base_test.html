@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Unit Tests - sao</title>
+  <script src="../closure-library/closure/goog/base.js"></script>
+  <script>
+    goog.require('goog.math.Long');
+    goog.require('goog.testing.jsunit');
+  </script>
+  <script src="base.js"></script>
+  <script>
+    goog.require('sao');
+  </script>
+</head>
+<body>
+  <script>
+    function assertCalculation(a, b) {
+      a = (a instanceof goog.math.Long) ? sao.finalize(a) : a;
+      assertEquals(a, b);
+    }
+
+    function testAdd() {
+      assertCalculation(sao.add(100, 100), 200);
+      assertCalculation(sao.add('100', '100'), 200);
+      assertCalculation(sao.add('100', 100), 200);
+      assertCalculation(sao.add(-100, -100), -200);
+      assertCalculation(sao.add(100, -100), 0);
+      assertCalculation(sao.add('-100', '-100'), -200);
+      assertCalculation(sao.add('100', '-100'), 0);
+
+      assertCalculation(sao.add(100.0, 100), 200.0);
+      assertCalculation(sao.add(100.0, 100.0), 200.0);
+      assertCalculation(sao.add(100.001, 100.999), 201);
+      assertCalculation(sao.add(100.0, -0.9), 99.1);
+      assertCalculation(sao.add(20.2, -20), 0.2);
+
+      assertCalculation(sao.add(100, 100.01, 100.24, -0.25), 300);
+
+      assertCalculation(sao.add(10000000, 9999999), 19999999);
+    }
+
+    function testSub() {
+      assertCalculation(sao.sub(100, 50), 50);
+      assertCalculation(sao.sub(50, 100), -50);
+      assertCalculation(sao.sub(-50, 100), -150);
+      assertCalculation(sao.sub(-50, -100), 50);
+
+      assertCalculation(sao.sub(100.5, 50), 50.5);
+      assertCalculation(sao.sub(100, 50.5), 49.5);
+      assertCalculation(sao.sub(100.5, 50.1), 50.4);
+      assertCalculation(sao.sub(20.2, 20), 0.2);
+
+      assertCalculation(sao.sub(100.5, 0.05, 100, 0.4), 0.05);
+    }
+
+    function testMul() {
+      assertCalculation(sao.mul(10, 10), 100);
+      assertCalculation(sao.mul(-10, -10), 100);
+      assertCalculation(sao.mul(-10, 10), -100);
+      assertCalculation(sao.mul(0.1, 0.1), 0.01);
+      assertCalculation(sao.mul(999.9, 10), 9999);
+      assertCalculation(sao.mul(0.1, 6), 0.6);
+
+      assertCalculation(sao.mul(0.1, 0.1, 0.1, 0.1, 100), 0.01);
+    }
+
+    function testDiv() {
+      assertCalculation(sao.div(100, 10), 10);
+      assertCalculation(sao.div(1004, 20), 50.2);
+      assertCalculation(sao.div(10, 3), 3.3333333333333335);
+      assertCalculation(sao.div(50.2, 4), 12.55);
+      assertCalculation(sao.div(-50.2, 4), -12.55);
+      assertCalculation(sao.div(50.2, -4), -12.55);
+
+      assertCalculation(sao.div(sao.div(50.2, 4), 5), 2.51);
+    }
+
+    function testToLong_() {
+      var value;
+      
+      value = sao.toLong_(123);
+      assertEquals(value.getRawDecimal(), 0);
+      assertEquals(value.getRawValue(), 123);
+      assertEquals(value.toNumber(), 123);
+
+      value = sao.toLong_('123');
+      assertEquals(value.getRawDecimal(), 0);
+      assertEquals(value.getRawValue(), '123');
+      assertEquals(value.toNumber(), 123);
+
+      value = sao.toLong_(-123);
+      assertEquals(value.getRawDecimal(), 0);
+      assertEquals(value.getRawValue(), -123);
+      assertEquals(value.toNumber(), -123);
+
+      value = sao.toLong_(123.456);
+      assertEquals(value.getRawDecimal(), 3);
+      assertEquals(value.getRawValue(), 123.456);
+      assertEquals(value.toNumber(), 123456);
+
+      value = sao.toLong_(-123.4);
+      assertEquals(value.getRawDecimal(), 1);
+      assertEquals(value.getRawValue(), -123.4);
+      assertEquals(value.toNumber(), -1234);
+
+      value = sao.toLong_(0.0001);
+      assertEquals(value.getRawDecimal(), 4);
+      assertEquals(value.getRawValue(), 0.0001);
+      assertEquals(value.toNumber(), 1);
+    }
+
+    function testRoundNumber() {
+      assertEquals(sao.round(100.5, 0), 101);
+      assertEquals(sao.round(100.45, 1), 100.5);
+      assertEquals(sao.round(0.999, 2), 1);
+
+      assertEquals(sao.round(-100.45, 1), -100.5);
+      assertEquals(sao.round(-0.99, 1), -1);
+
+      // No need to round, so should return thr raw value.
+      assertEquals(sao.round(100.5, 2), 100.5);
+      assertEquals(sao.round(100.555, 3), 100.555);
+      assertEquals(sao.round(100, 0), 100);
+      assertEquals(sao.round(-1, 1), -1);
+      assertEquals(sao.round(-0.999, 3), -0.999);
+    }
+
+    function testRoundLong() {
+      assertEquals(sao.round(sao.toLong_(100.5), 0), 101);
+      assertEquals(sao.round(sao.toLong_(100.45), 1), 100.5);
+      assertEquals(sao.round(sao.toLong_(0.999), 2), 1);
+
+      assertEquals(sao.round(sao.toLong_(-100.45), 1), -100.5);
+      assertEquals(sao.round(sao.toLong_(-0.99), 1), -1);
+
+      // No need to round, so should return thr raw value.
+      assertEquals(sao.round(sao.toLong_(100.5), 2), 100.5);
+      assertEquals(sao.round(sao.toLong_(100.555), 3), 100.555);
+      assertEquals(sao.round(sao.toLong_(100), 0), 100);
+      assertEquals(sao.round(sao.toLong_(-1), 1), -1);
+      assertEquals(sao.round(sao.toLong_(-0.999), 3), -0.999);
+    }
+
+    function testFinalize() {
+      assertEquals(sao.finalize(sao.toLong_(12345)), 12345);
+      assertEquals(sao.finalize(sao.toLong_(123.45)), 123.45);
+      assertEquals(sao.finalize(sao.toLong_(-12345)), -12345);
+      assertEquals(sao.finalize(sao.toLong_(-123.45)), -123.45);
+      
+      assertEquals(sao.finalize(sao.toLong_(0.1)), 0.1);
+      assertEquals(sao.finalize(sao.toLong_(0.00001)), 0.00001);
+      assertEquals(sao.finalize(sao.toLong_(-0.00001)), -0.00001);
+    }
+  </script>
+</body>
+</html>
