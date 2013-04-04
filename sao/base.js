@@ -56,16 +56,6 @@ sao.calc = function(var_args) {
 
 
 /**
- * @param {*} value
- * @return {boolean}
- * @private
- */
-sao.isOperatorMark_ = function(value) {
-  return goog.isString(value) && /\+|\-|\*|\//.test(value);
-};
-
-
-/**
  * Example:
  * <pre>
  * // Basic usage:
