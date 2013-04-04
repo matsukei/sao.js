@@ -397,6 +397,7 @@ goog.object.extend(
 );
 
 
+goog.exportSymbol('sao.calc', sao.calc);
 goog.exportSymbol('sao.add', sao.add);
 goog.exportSymbol('sao.div', sao.div);
 goog.exportSymbol('sao.sub', sao.sub);
