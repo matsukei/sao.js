@@ -148,10 +148,6 @@ sao.finalize = function(value) {
   var result = value.toString();
   var decimal = value.getRawDecimal();
 
-  if (method == sao.Method.MUL) {
-    decimal *= value.getCalculationMemberCount();
-  }
-
   if (decimal != 0) {
     var integer, exp, isNegative = false;
 
@@ -186,9 +182,7 @@ sao.calculate_ = function(method, values, fn) {
   var member = sao.prepareMember_(values);
 
   result = goog.array.reduce(goog.array.slice(member.values, 1), fn, member.values[0]);
-
-  result.calculatedBy(method, member.values.length);
-  result.setRawDecimal(member.decimal);
+  result.calculatedBy(method, member.values.length, member.decimal);
 
   return result;
 };
@@ -301,10 +295,16 @@ goog.object.extend(
     /**
      * @param {sao.Method} method
      * @param {number} memberCount
+     * @param {number} rawDecimal
      */
-    calculatedBy: function(method, memberCount) {
+    calculatedBy: function(method, memberCount, rawDecimal) {
       this.calculationMethod_ = method;
       this.calculationMemberCount_ = memberCount;
+      this.rawDecimal_ = rawDecimal;
+
+      if (method == sao.Method.MUL) {
+        this.rawDecimal_ *= memberCount;
+      }
     }, 
 
     /**
@@ -331,13 +331,6 @@ goog.object.extend(
       }
       this.rawDecimal_ = opt_decimal || 0;
     }, 
-
-    /**
-     * @param {number} decimal
-     */
-    setRawDecimal: function(decimal) {
-      this.rawDecimal_ = decimal;
-    },
 
     /**
      * @param {goog.math.Long} other

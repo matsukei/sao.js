@@ -64,6 +64,7 @@
       assertCalculation(sao.mul(0.1, 6), 0.6);
 
       assertCalculation(sao.mul(0.1, 0.1, 0.1, 0.1, 100), 0.01);
+      assertCalculation(sao.mul(sao.mul(0.1, 0.1), 100), 1);
     }
 
     function testDiv() {
