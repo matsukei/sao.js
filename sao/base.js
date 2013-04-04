@@ -153,7 +153,7 @@ sao.finalize = function(value) {
   }
 
   if (decimal != 0) {
-    var intValue, floatValue, isNegative = false;
+    var integer, exp, isNegative = false;
 
     if (result.charAt(0) == '-') {
       isNegative = true;
@@ -161,13 +161,13 @@ sao.finalize = function(value) {
     }
 
     if (result.length <= decimal) {
-      floatValue = goog.string.padNumber(result, decimal);
-      intValue = '0';
+      exp = goog.string.padNumber(result, decimal);
+      integer = '0';
     } else {
-      floatValue = result.slice(-decimal);
-      intValue = result.slice(0, -decimal);
+      exp = result.slice(-decimal);
+      integer = result.slice(0, -decimal);
     }
-    result = (isNegative ? '-' : '') + intValue + '.' + floatValue;
+    result = (isNegative ? '-' : '') + integer + '.' + exp;
   }
 
   return goog.string.toNumber(result);
