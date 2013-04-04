@@ -21,6 +21,32 @@
       assertEquals(a, b);
     }
 
+    function testCalc() {
+      // Addition
+      assertEquals(sao.calc(100, '+', 50), 150);
+      assertEquals(sao.calc(100, '+', 50, '+', 0.1), 150.1);
+      assertEquals(sao.calc(-100, '+', sao.add(1, 9), '+', -10), -100);
+
+      // Subtract
+      assertEquals(sao.calc(50, '-', 10), 40);
+      assertEquals(sao.calc(50, '-', '10', '-', 0.5), 39.5);
+      assertEquals(sao.calc(sao.sub(20, 10), '-', 10, '-', 10), -10);
+
+      // Division
+      assertEquals(sao.calc(100, '/', 10), 10);
+      assertEquals(sao.calc(1000, '/', 10, '/', 10), 10);
+      assertEquals(sao.calc(20, '/', sao.div(20, 5), '/', '2'), 2.5);
+
+      // Multiply
+      assertEquals(sao.calc(2, '*', 5), 10);
+      assertEquals(sao.calc(2, '*', '5', '*', -1), -10);
+      assertEquals(sao.calc(0.1, '*', 0.1, '*', sao.mul(10, 10)), 1);
+
+      // Mix
+      assertEquals(sao.calc(100, '+', 100, '-', 50, '/', 5, '*', 0.1), 3);
+      assertEquals(sao.calc(sao.add(0.1, 0.1), '*', sao.sub(20.2, 20)), 0.04);
+    }
+
     function testAdd() {
       assertCalculation(sao.add(100, 100), 200);
       assertCalculation(sao.add('100', '100'), 200);

@@ -51,19 +51,25 @@ sao.finalize(result); // 3 <Number>
 ### Round
 
 ``` javascript
-sao.round(1.456, 1); // => 1.5 (Number!)
-sao.round(1.456);    // => 2 (Number!)
+sao.round(1.456, 1); // => 1.5 <Number (Not an Object!)>
+sao.round(1.456);    // => 2 <Number (Not an Object!)>
 ```
 
 ### How to mix
 
 ``` javascript
-sao.round(sao.div(sao.add(sao.mul(10, 2), sao.div(20, 4)), 2), 0); // => 13
+sao.calc(10, '*', 2, '+', 5, '/', 2); // => 12.5 <Number>
+```
+
+This is the same as the following:
+
+``` javascript
+sao.div(sao.add(sao.mul(10, 2), 5), 2);
 ```
 
 ### More
 
-See test script [sao/base_test.html](https://github.com/matsukei/sao/blob/master/sao/base_test.html).
+See [sao/base_test.html (UnitTest)](https://github.com/matsukei/sao/blob/master/sao/base_test.html).
 
 ## Development
 

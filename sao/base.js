@@ -24,6 +24,50 @@ sao.Method = {
 /**
  * Example:
  * <pre>
+ * sao.calc(100, '+', 100, '-', '50', '/', 5, '*', 0.2); // => 6 <Numnber>
+ * </pre>
+ * @param {...(number|string)} var_args
+ * @return {number}
+ */
+sao.calc = function(var_args) {
+  var result;
+  var operators = [];
+  var values = [];
+
+  goog.array.forEach(arguments, function(e) {
+    if (goog.isString(e) && /^\+|\-|\*|\/$/.test(e)) {
+      operators[operators.length] = e;
+    } else {
+      values[values.length] = e;
+    }
+  });
+
+  result = goog.array.reduce(goog.array.slice(values, 1), function(result, value) {
+    switch(operators.shift()) {
+      case '+': return sao.add(result, value); break;
+      case '-': return sao.sub(result, value); break;
+      case '/': return sao.div(result, value); break;
+      case '*': return sao.mul(result, value); break;
+    }
+  }, values[0]);
+
+  return sao.finalize(result);
+};
+
+
+/**
+ * @param {*} value
+ * @return {boolean}
+ * @private
+ */
+sao.isOperatorMark_ = function(value) {
+  return goog.isString(value) && /\+|\-|\*|\//.test(value);
+};
+
+
+/**
+ * Example:
+ * <pre>
  * // Basic usage:
  * sao.add(1, '2', 3);
  * sao.add(1, -1);
