@@ -185,8 +185,7 @@ sao.calculate_ = function(method, values, fn) {
   var result;
   var member = sao.prepareMember_(values);
 
-  result = goog.array.reduce(goog.array.slice(member.values, 1), 
-      function(r, v) { return fn(r, v) }, member.values[0]);
+  result = goog.array.reduce(goog.array.slice(member.values, 1), fn, member.values[0]);
 
   result.calculatedBy(method, member.values.length);
   result.setRawDecimal(member.decimal);
