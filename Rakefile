@@ -30,6 +30,7 @@ task :compile do
     c << " --output_mode=compiled"
     c << " --compiler_jar=\"#{ROOT.join('closure-compiler', 'compiler.jar')}\""
     c << " --compiler_flags=\"--compilation_level=ADVANCED_OPTIMIZATIONS\""
+    c << " --compiler_flags=\"--warning_level=VERBOSE\""
     c << " --compiler_flags=\"--output_wrapper=(function(){%output%})()\""
     c << " > sao.js"
   end

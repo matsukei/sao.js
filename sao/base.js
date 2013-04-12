@@ -156,11 +156,10 @@ sao.round = function(v, opt_level) {
       result = value;
     }
     result = sao.finalize(result);
-    result = String(result).slice(0, -(decimal - level));
+    return goog.string.toNumber(String(result).slice(0, -(decimal - level)));
   } else {
-    result = sao.finalize(value);
+    return sao.finalize(value);
   }
-  return goog.string.toNumber(result);
 };
 
 
@@ -191,7 +190,7 @@ sao.finalize = function(value) {
     }
 
     if (result.length <= decimal) {
-      exp = goog.string.padNumber(result, decimal);
+      exp = goog.string.padNumber(goog.string.toNumber(result), decimal);
       integer = '0';
     } else {
       exp = result.slice(-decimal);
@@ -206,7 +205,7 @@ sao.finalize = function(value) {
 
 /**
  * @param {sao.Method} method
- * @param {(Array.<(number|string|goog.math.Long)>|ArrayLike.<(number|string|goog.math.Long)>)} values
+ * @param {(Array.<(number|string|goog.math.Long)>|Arguments.<(number|string|goog.math.Long)>)} values
  * @param {function(goog.math.Long, goog.math.Long):goog.math.Long} fn
  * @return {goog.math.Long}
  * @private
@@ -264,7 +263,7 @@ sao.toLong_ = function(value) {
 
 
 /**
- * @param {(Array.<(string|number|goog.math.Long)>|ArrayLike.<(string|number|goog.math.Long)>)} values
+ * @param {(Array.<(string|number|goog.math.Long)>|Arguments.<(string|number|goog.math.Long)>)} values
  * @return {Object} Object has values and decimal. 
  *     values is {Array.<goog.math.Long>}, decimal is {number}.
  * @private
@@ -303,10 +302,10 @@ goog.object.extend(
    * @lends {goog.math.Long.prototype}
    */ ({
     /**
-     * @type {string|number)}
+     * @type {(string|number|undefined)}
      * @private
      */
-    rawValue_: null, 
+    rawValue_: undefined, 
 
     /**
      * @type {number}
@@ -315,7 +314,7 @@ goog.object.extend(
     rawDecimal_: 0, 
 
     /**
-     * @type {sao.Operation}
+     * @type {?sao.Method}
      * @private
      */
     calculationMethod_: null,
