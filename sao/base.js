@@ -88,7 +88,7 @@ sao.add = function(var_args) {
  * @return {goog.math.Long}
  */
 sao.div = function(a, b) {
-  var member = sao.prepareMember_([a, b]);
+  var member = sao.prepareMember_(sao.Method.DIV, [a, b]);
   var values = member.values;
 
   return sao.toLong_(values[0] / values[1]);
@@ -212,7 +212,7 @@ sao.finalize = function(value) {
  */
 sao.calculate_ = function(method, values, fn) {
   var result;
-  var member = sao.prepareMember_(values);
+  var member = sao.prepareMember_(method, values);
 
   result = goog.array.reduce(goog.array.slice(member.values, 1), fn, member.values[0]);
   result.calculatedBy(method, member.values.length, member.decimal);
@@ -247,6 +247,8 @@ sao.toLong_ = function(value) {
   if (!goog.isString(value) && !goog.isNumber(value)) {
     throw new Error('Invalid value: "' + value + '"');
   }
+  // '2.0'(or 2.0) // => 2
+  value = goog.string.toNumber(/** @type {string} */ (String(value)));
 
   var val = String(value);
   var result, res;
@@ -263,35 +265,45 @@ sao.toLong_ = function(value) {
 
 
 /**
+ * @param {sao.Method} method
  * @param {(Array.<(string|number|goog.math.Long)>|Arguments.<(string|number|goog.math.Long)>)} values
  * @return {Object} Object has values and decimal. 
  *     values is {Array.<goog.math.Long>}, decimal is {number}.
  * @private
  */
-sao.prepareMember_ = function(values) {
-  var decimals, maxDecimal;
-
+sao.prepareMember_ = function(method, values) {
   values = goog.array.map(values, function(value) {
-    return (value instanceof goog.math.Long) ? value: sao.toLong_(value);
+    return (value instanceof goog.math.Long) ? value : sao.toLong_(value);
   });
-  maxDecimal = Math.max.apply(null, goog.array.map(values, function(value, i) {
-    return value.getRawDecimal();
-  }));
 
-  if (maxDecimal != 0) {
-    var diff, newValue;
-    values = goog.array.map(values, function(value) {
-      diff = maxDecimal - value.getRawDecimal();
-      if (diff != 0) {
-        newValue = value.multiply(goog.math.Long.fromNumber(Math.pow(10, diff)));
-        newValue.inheritRaw(value);
-        return newValue;
-      } else {
-        return value;
-      }
-    });
+  // Multiply
+  if (method == sao.Method.MUL) {
+    var totalDecimal = goog.array.reduce(values, function(res, value) {
+      return res + value.getRawDecimal();
+    }, 0);
+    return {values: values, decimal: totalDecimal};
+
+  // Other (Addition, Substract, Division)
+  } else {
+    var maxDecimal = Math.max.apply(null, goog.array.map(values, function(value, i) {
+      return value.getRawDecimal();
+    }));
+
+    if (maxDecimal != 0) {
+      var diff, newValue;
+      values = goog.array.map(values, function(value) {
+        diff = maxDecimal - value.getRawDecimal();
+        if (diff != 0) {
+          newValue = value.multiply(goog.math.Long.fromNumber(Math.pow(10, diff)));
+          newValue.inheritRaw(value);
+          return newValue;
+        } else {
+          return value;
+        }
+      });
+    }
+    return {values: values, decimal: maxDecimal};
   }
-  return {values: values, decimal: maxDecimal};
 };
 
 
@@ -334,10 +346,6 @@ goog.object.extend(
       this.calculationMethod_ = method;
       this.calculationMemberCount_ = memberCount;
       this.rawDecimal_ = rawDecimal;
-
-      if (method == sao.Method.MUL) {
-        this.rawDecimal_ *= memberCount;
-      }
     }, 
 
     /**
