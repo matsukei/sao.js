@@ -170,6 +170,8 @@
       assertEquals(sao.round(sao.toLong_(100), 0), 100);
       assertEquals(sao.round(sao.toLong_(-1), 1), -1);
       assertEquals(sao.round(sao.toLong_(-0.999), 3), -0.999);
+
+      assertEquals(sao.round(sao.calc(25, '/', 79, '*', 100), 2), 31.65);
     }
 
     function testFinalize() {
