@@ -10,6 +10,10 @@ Then, put this line in your html.
 ``` html
 <script src="sao.js"></script>
 ```
+Or, 
+``` html
+<script src="https://raw.github.com/matsukei/sao/master/sao.js"></script>
+```
 
 That's all.
 
