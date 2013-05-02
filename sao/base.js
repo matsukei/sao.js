@@ -151,13 +151,14 @@ sao.round = function(v, opt_level) {
       // 18.9356 (with level is 2) -> 18.93
       value.toString().slice(0, -(decimal - level))
     );
+    value.setRaw(undefined, level);
 
     if (goog.string.toNumber(target) > 4) {
       var adder = goog.math.Long.fromNumber(1);
       adder = value.isNegative() ? adder.negate() : adder;
 
       result = value.add(adder);
-      result.setRaw(undefined, level);
+      result.inheritRaw(value);
     } else {
       result = value;
     }
