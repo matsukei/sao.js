@@ -145,18 +145,23 @@ sao.round = function(v, opt_level) {
 
   if (sao.canRound_(value, level)) {
     var decimal = value.getRawDecimal();
-    var rounder = strval.charAt(strval.length - decimal + level);
+    var target = strval.charAt(strval.length - decimal + level);
 
-    if (goog.string.toNumber(rounder) > 4) {
-      var adder = Math.pow(10, decimal - level) * (value.isNegative() ? -1 : 1);
+    value = sao.toLong_(
+      // 18.9356 (with level is 2) -> 18.93
+      value.toString().slice(0, -(decimal - level))
+    );
 
-      result = value.add(goog.math.Long.fromNumber(adder));
-      result.inheritRaw(value);
+    if (goog.string.toNumber(target) > 4) {
+      var adder = goog.math.Long.fromNumber(1);
+      adder = value.isNegative() ? adder.negate() : adder;
+
+      result = value.add(adder);
+      result.setRaw(undefined, level);
     } else {
       result = value;
     }
-    result = sao.finalize(result);
-    return goog.string.toNumber(String(result).slice(0, -(decimal - level)));
+    return sao.finalize(result);
   } else {
     return sao.finalize(value);
   }
@@ -198,7 +203,6 @@ sao.finalize = function(value) {
     }
     result = (isNegative ? '-' : '') + integer + '.' + exp;
   }
-
   return goog.string.toNumber(result);
 };
 

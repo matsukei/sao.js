@@ -154,6 +154,8 @@
       assertEquals(sao.round(100, 0), 100);
       assertEquals(sao.round(-1, 1), -1);
       assertEquals(sao.round(-0.999, 3), -0.999);
+
+      assertEquals(sao.round(18.938656280428432, 2), 18.94);
     }
 
     function testRoundLong() {
@@ -171,6 +173,7 @@
       assertEquals(sao.round(sao.toLong_(-1), 1), -1);
       assertEquals(sao.round(sao.toLong_(-0.999), 3), -0.999);
 
+      assertEquals(sao.round(sao.mul(sao.div(778, 4108), 100), 2), 18.94);
       assertEquals(sao.round(sao.calc(25, '/', 79, '*', 100), 2), 31.65);
     }
 
