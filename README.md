@@ -4,7 +4,7 @@ SAO is a library that provides (maybe) strict arithmetic for JavaScript.
 
 ## Installation
 
-At first, download [sao.js](https://raw.github.com/matsukei/sao/master/sao.js).
+At first, download [sao.js](https://raw.github.com/matsukei/sao.js/master/sao.js).
 Then, put this line in your html.
 
 ``` html
@@ -12,7 +12,7 @@ Then, put this line in your html.
 ```
 Or, 
 ``` html
-<script src="https://raw.github.com/matsukei/sao/master/sao.js"></script>
+<script src="https://raw.github.com/matsukei/sao.js/master/sao.js"></script>
 ```
 
 That's all.
